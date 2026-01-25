@@ -97,7 +97,9 @@ export default function Projects() {
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
+                                        aria-hidden="true"
                                     >
+
                                         <path
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
@@ -111,7 +113,9 @@ export default function Projects() {
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
+                                        aria-hidden="true"
                                     >
+
                                         <path
                                             strokeLinecap="round"
                                             strokeLinejoin="round"

@@ -9,6 +9,8 @@ export default function Hero() {
     const nameRef = useRef<HTMLHeadingElement>(null);
     const [displayText, setDisplayText] = useState("Rohan Thapa Shrestha");
 
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
     useEffect(() => {
         const ctx = gsap.context(() => {
             // Set initial states
@@ -64,16 +66,21 @@ export default function Hero() {
                 );
         }, heroRef);
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
     }, []);
 
     // Glitch effect on hover
     const handleMouseEnter = () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+
         const originalText = "Rohan Thapa Shrestha";
         const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
         let iteration = 0;
 
-        const interval = setInterval(() => {
+        intervalRef.current = setInterval(() => {
             setDisplayText(
                 originalText
                     .split("")
@@ -87,11 +94,11 @@ export default function Hero() {
             );
 
             if (iteration >= originalText.length) {
-                clearInterval(interval);
+                if (intervalRef.current) clearInterval(intervalRef.current);
             }
 
-            iteration += 1.5; // Much faster iteration
-        }, 20); // Faster interval
+            iteration += 1.5;
+        }, 20);
     };
 
     return (

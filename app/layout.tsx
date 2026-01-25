@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "./components/SmoothScroll";
+
 
 const jetbrainsMono = JetBrains_Mono({
     subsets: ["latin"],
@@ -34,11 +36,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="scroll-smooth">
+        <html lang="en">
             <body
-                className={`${jetbrainsMono.variable} ${plusJakartaSans.variable} antialiased bg-slate-950 text-slate-100`}
-            >
-                {children}
+                className={`${jetbrainsMono.variable} ${plusJakartaSans.variable} antialiased bg-slate-950 text-slate-100`}>
+                <SmoothScroll>
+                    {children}
+                </SmoothScroll>
             </body>
         </html>
     );

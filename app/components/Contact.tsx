@@ -33,6 +33,14 @@ export default function Contact() {
         return () => ctx.revert();
     }, []);
 
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -50,13 +58,13 @@ export default function Contact() {
 
         setStatus("sending");
 
-        // Simulate form submission (replace with actual API call)
-        setTimeout(() => {
+        // Simulate form submission
+        timeoutRef.current = setTimeout(() => {
             setStatus("success");
             setFormState({ name: "", email: "", message: "" });
 
             // Reset status after 3 seconds
-            setTimeout(() => setStatus("idle"), 3000);
+            timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
         }, 1500);
     };
 
