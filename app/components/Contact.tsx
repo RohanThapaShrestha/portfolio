@@ -82,83 +82,84 @@ export default function Contact() {
                 </p>
 
                 {/* Contact Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label
-                            htmlFor="name"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
-                        >
-                            Name
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            required
-                            value={formState.name}
-                            onChange={(e) =>
-                                setFormState({ ...formState, name: e.target.value })
-                            }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
-                            placeholder="Your Name"
-                        />
-                    </div>
+                 <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <label
+          htmlFor="name"
+          className="block font-heading text-sm text-cyan-400 mb-2"
+        >
+          Name
+        </label>
+        <input
+          type="text"
+          id="name"
+          required
+          value={formState.name}
+          onChange={(e) =>
+            setFormState({ ...formState, name: e.target.value })
+          }
+          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+          placeholder="Your Name"
+        />
+      </div>
 
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
-                        >
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            required
-                            value={formState.email}
-                            onChange={(e) =>
-                                setFormState({ ...formState, email: e.target.value })
-                            }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
-                            placeholder="your@email.com"
-                        />
-                    </div>
+      <div>
+        <label
+          htmlFor="email"
+          className="block font-heading text-sm text-cyan-400 mb-2"
+        >
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          required
+          value={formState.email}
+          onChange={(e) =>
+            setFormState({ ...formState, email: e.target.value })
+          }
+          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+          placeholder="your@email.com"
+        />
+      </div>
 
-                    <div>
-                        <label
-                            htmlFor="message"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
-                        >
-                            Message
-                        </label>
-                        <textarea
-                            id="message"
-                            required
-                            rows={5}
-                            value={formState.message}
-                            onChange={(e) =>
-                                setFormState({ ...formState, message: e.target.value })
-                            }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors resize-none"
-                            placeholder="Your message..."
-                        />
-                    </div>
+      <div>
+        <label
+          htmlFor="message"
+          className="block font-heading text-sm text-cyan-400 mb-2"
+        >
+          Message
+        </label>
+        <textarea
+          id="message"
+          required
+          rows={5}
+          value={formState.message}
+          onChange={(e) =>
+            setFormState({ ...formState, message: e.target.value })
+          }
+          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors resize-none"
+          placeholder="Your message..."
+        />
+      </div>
 
-                    <button
-                        type="submit"
-                        disabled={status === "sending"}
-                        className={`w-full py-4 rounded-lg font-heading text-sm transition-all btn-cyber ${status === "success"
-                            ? "bg-emerald-500 text-slate-900"
-                            : status === "error"
-                                ? "bg-red-500/20 text-red-400 border border-red-500"
-                                : "bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20"
-                            }`}
-                    >
-                        {status === "idle" && "Send Message"}
-                        {status === "sending" && "Sending..."}
-                        {status === "success" && "Message Sent! ✓"}
-                        {status === "error" && "Invalid Email Format"}
-                    </button>
-                </form>
+      <button
+        type="submit"
+        disabled={status === "sending"}
+        className={`w-full py-4 rounded-lg font-heading text-sm transition-all btn-cyber ${
+          status === "success"
+            ? "bg-emerald-500 text-slate-900"
+            : status === "error"
+            ? "bg-red-500/20 text-red-400 border border-red-500"
+            : "bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20"
+        }`}
+      >
+        {status === "idle" && "Send Message"}
+        {status === "sending" && "Sending..."}
+        {status === "success" && "Message Sent! ✓"}
+        {status === "error" && "Invalid Email Format"}
+      </button>
+    </form>
 
                 {/* Contact Info */}
                 <div className="mt-12 text-center space-y-6 text-slate-500 text-sm">
@@ -207,7 +208,7 @@ export default function Contact() {
                     <div className="flex items-center justify-center gap-6 pt-4">
                         {/* Facebook */}
                         <a
-                            href="https://facebook.com/RohanThapaShrestha"
+                            href="https://www.facebook.com/rohan.thapasth"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-slate-500 hover:text-cyan-400 transition-colors"
@@ -220,7 +221,7 @@ export default function Contact() {
 
                         {/* Instagram */}
                         <a
-                            href="https://instagram.com/Rohan_Thapa_Sth"
+                            href="https://www.instagram.com/rohanthapasth/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-slate-500 hover:text-pink-400 transition-colors"
@@ -233,7 +234,7 @@ export default function Contact() {
 
                         {/* LinkedIn */}
                         <a
-                            href="https://linkedin.com/in/RohanThapaShrestha"
+                            href="https://www.linkedin.com/in/rohan-thapa-shrestha-3469a920a/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-slate-500 hover:text-blue-400 transition-colors"
