@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import emailjs from "@emailjs/browser";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact() {
     const sectionRef = useRef<HTMLElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
     const [formState, setFormState] = useState({
         name: "",
         email: "",
@@ -41,7 +43,7 @@ export default function Contact() {
         };
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Basic validation
@@ -58,14 +60,37 @@ export default function Contact() {
 
         setStatus("sending");
 
-        // Simulate form submission
-        timeoutRef.current = setTimeout(() => {
+        try {
+            // EmailJS Configuration - Replace with your actual values
+            const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
+            const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
+            const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+
+            // Send email using EmailJS
+            await emailjs.send(
+                SERVICE_ID,
+                TEMPLATE_ID,
+                {
+                    from_name: formState.name,
+                    from_email: formState.email,
+                    message: formState.message,
+                    to_email: "rohanthapashrestha@gmail.com", // Your email
+                },
+                PUBLIC_KEY
+            );
+
             setStatus("success");
             setFormState({ name: "", email: "", message: "" });
 
             // Reset status after 3 seconds
             timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
-        }, 1500);
+        } catch (error) {
+            console.error("Email sending failed:", error);
+            setStatus("error");
+
+            // Reset error status after 3 seconds
+            timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
+        }
     };
 
     return (
@@ -82,84 +107,83 @@ export default function Contact() {
                 </p>
 
                 {/* Contact Form */}
-                 <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label
-          htmlFor="name"
-          className="block font-heading text-sm text-cyan-400 mb-2"
-        >
-          Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          required
-          value={formState.name}
-          onChange={(e) =>
-            setFormState({ ...formState, name: e.target.value })
-          }
-          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
-          placeholder="Your Name"
-        />
-      </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="block font-heading text-sm text-cyan-400 mb-2"
+                        >
+                            Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            required
+                            value={formState.name}
+                            onChange={(e) =>
+                                setFormState({ ...formState, name: e.target.value })
+                            }
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+                            placeholder="Your Name"
+                        />
+                    </div>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="block font-heading text-sm text-cyan-400 mb-2"
-        >
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          required
-          value={formState.email}
-          onChange={(e) =>
-            setFormState({ ...formState, email: e.target.value })
-          }
-          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
-          placeholder="your@email.com"
-        />
-      </div>
+                    <div>
+                        <label
+                            htmlFor="email"
+                            className="block font-heading text-sm text-cyan-400 mb-2"
+                        >
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            required
+                            value={formState.email}
+                            onChange={(e) =>
+                                setFormState({ ...formState, email: e.target.value })
+                            }
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+                            placeholder="your@email.com"
+                        />
+                    </div>
 
-      <div>
-        <label
-          htmlFor="message"
-          className="block font-heading text-sm text-cyan-400 mb-2"
-        >
-          Message
-        </label>
-        <textarea
-          id="message"
-          required
-          rows={5}
-          value={formState.message}
-          onChange={(e) =>
-            setFormState({ ...formState, message: e.target.value })
-          }
-          className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors resize-none"
-          placeholder="Your message..."
-        />
-      </div>
+                    <div>
+                        <label
+                            htmlFor="message"
+                            className="block font-heading text-sm text-cyan-400 mb-2"
+                        >
+                            Message
+                        </label>
+                        <textarea
+                            id="message"
+                            required
+                            rows={5}
+                            value={formState.message}
+                            onChange={(e) =>
+                                setFormState({ ...formState, message: e.target.value })
+                            }
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors resize-none"
+                            placeholder="Your message..."
+                        />
+                    </div>
 
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className={`w-full py-4 rounded-lg font-heading text-sm transition-all btn-cyber ${
-          status === "success"
-            ? "bg-emerald-500 text-slate-900"
-            : status === "error"
-            ? "bg-red-500/20 text-red-400 border border-red-500"
-            : "bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20"
-        }`}
-      >
-        {status === "idle" && "Send Message"}
-        {status === "sending" && "Sending..."}
-        {status === "success" && "Message Sent! ✓"}
-        {status === "error" && "Invalid Email Format"}
-      </button>
-    </form>
+                    <button
+                        type="submit"
+                        disabled={status === "sending"}
+                        className={`w-full py-4 rounded-lg font-heading text-sm transition-all btn-cyber ${status === "success"
+                                ? "bg-emerald-500 text-slate-900"
+                                : status === "error"
+                                    ? "bg-red-500/20 text-red-400 border border-red-500"
+                                    : "bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20"
+                            }`}
+                    >
+                        {status === "idle" && "Send Message"}
+                        {status === "sending" && "Sending..."}
+                        {status === "success" && "Message Sent! ✓"}
+                        {status === "error" && "Invalid Email Format"}
+                    </button>
+                </form>
 
                 {/* Contact Info */}
                 <div className="mt-12 text-center space-y-6 text-slate-500 text-sm">
