@@ -2,12 +2,16 @@
 
 /* Custom Theme Variables */
 :root {
-    --accent: #22d3ee;
-    --accent-glow: rgba(34, 211, 238, 0.2);
+    --primary: #50207A;
+    --secondary: #D6B9FC;
+    --accent: #838CE5;
+    --accent-glow: rgba(131, 140, 229, 0.2);
     --success: #4ade80;
     scroll-padding-top: 80px;
     /* Account for navbar height */
 }
+
+
 
 /* Smooth Scrollbar */
 ::-webkit-scrollbar {
@@ -29,7 +33,7 @@
 
 /* Selection */
 ::selection {
-    background-color: rgba(34, 211, 238, 0.3);
+    background-color: rgba(131, 140, 229, 0.3);
     color: #f8fafc;
 }
 
@@ -67,7 +71,7 @@
 
 /* Gradient text */
 .gradient-text {
-    background: linear-gradient(135deg, #22d3ee 0%, #4ade80 100%);
+    background: linear-gradient(135deg, #D6B9FC 0%, #838CE5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -79,13 +83,13 @@
 }
 
 .card-glow:hover {
-    box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+    box-shadow: 0 0 30px rgba(131, 140, 229, 0.15);
     transform: translateY(-5px);
 }
 
 /* Timeline styles */
 .timeline-dot {
-    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+    box-shadow: 0 0 10px rgba(131, 140, 229, 0.5);
 }
 
 /* Form focus styles */
@@ -105,13 +109,73 @@ textarea:focus {
     content: "";
     position: absolute;
     top: 0;
-   
+
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg,
             transparent,
-            rgba(34, 211, 238, 0.2),
+            rgba(131, 140, 229, 0.2),
             transparent);
-    
+
 }
 
+/* Custom Color Utilities matching the new purple/blue theme */
+.text-accent {
+    color: var(--accent);
+}
+
+.text-primary-custom {
+    color: var(--primary);
+}
+
+.text-secondary-custom {
+    color: var(--secondary);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}
+
+.bg-accent\/5 {
+    background-color: rgba(131, 140, 229, 0.05);
+}
+
+.bg-accent\/10 {
+    background-color: rgba(131, 140, 229, 0.1);
+}
+
+.bg-accent\/20 {
+    background-color: rgba(131, 140, 229, 0.2);
+}
+
+.border-accent {
+    border-color: var(--accent);
+}
+
+.border-accent\/30 {
+    border-color: rgba(131, 140, 229, 0.3);
+}
+
+.border-accent\/40 {
+    border-color: rgba(131, 140, 229, 0.4);
+}
+
+.hover\:text-accent:hover {
+    color: var(--accent);
+}
+
+.hover\:bg-accent:hover {
+    background-color: var(--accent);
+}
+
+.hover\:bg-accent\/20:hover {
+    background-color: rgba(131, 140, 229, 0.2);
+}
+
+.focus\:border-accent:focus {
+    border-color: var(--accent);
+}
+
+.group:hover .group-hover\:text-accent {
+    color: var(--accent);
+}

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import emailjs from "@emailjs/browser";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +14,8 @@ export default function Contact() {
         email: "",
         message: "",
     });
-    const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+    const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "validation_error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -43,7 +43,7 @@ export default function Contact() {
         };
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // Basic validation
@@ -54,41 +54,48 @@ export default function Contact() {
         // Email format validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formState.email)) {
-            setStatus("error");
+            setStatus("validation_error");
+            setErrorMessage("Invalid email format");
+            timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
             return;
         }
 
         setStatus("sending");
 
         try {
-            // EmailJS Configuration - Replace with your actual values
-            const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
-            const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
-            const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+            const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
-            // Send email using EmailJS
-            await emailjs.send(
-                SERVICE_ID,
-                TEMPLATE_ID,
-                {
-                    from_name: formState.name,
-                    from_email: formState.email,
-                    message: formState.message,
-                    to_email: "rohanthapashrestha@gmail.com", // Your email
-                },
-                PUBLIC_KEY
-            );
+            if (!ACCESS_KEY) {
+                throw new Error("Web3Forms access key not configured");
+            }
 
-            setStatus("success");
-            setFormState({ name: "", email: "", message: "" });
+            // Create FormData and populate it
+            const formData = new FormData();
+            formData.append("access_key", ACCESS_KEY);
+            formData.append("name", formState.name);
+            formData.append("email", formState.email);
+            formData.append("message", formState.message);
+            formData.append("subject", `Portfolio Contact: Message from ${formState.name}`);
 
-            // Reset status after 3 seconds
-            timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
+            // Send using Web3Forms API
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setStatus("success");
+                setFormState({ name: "", email: "", message: "" });
+                timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
+            } else {
+                throw new Error(result.message || "Failed to send message");
+            }
         } catch (error) {
             console.error("Email sending failed:", error);
             setStatus("error");
-
-            // Reset error status after 3 seconds
+            setErrorMessage(error instanceof Error ? error.message : "Failed to send message. Please try again.");
             timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
         }
     };
@@ -98,7 +105,7 @@ export default function Contact() {
             <div className="max-w-xl mx-auto contact-content">
                 {/* Section Title */}
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-4 text-center">
-                    <span className="text-cyan-400">05.</span> Get In Touch
+                    <span className="text-purple-400">05.</span> Get In Touch
                 </h2>
 
                 <p className="text-slate-400 text-center mb-12">
@@ -107,11 +114,11 @@ export default function Contact() {
                 </p>
 
                 {/* Contact Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} noValidate className="space-y-6">
                     <div>
                         <label
                             htmlFor="name"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
+                            className="block font-heading text-sm text-purple-400 mb-2"
                         >
                             Name
                         </label>
@@ -123,7 +130,7 @@ export default function Contact() {
                             onChange={(e) =>
                                 setFormState({ ...formState, name: e.target.value })
                             }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-purple-400 transition-colors"
                             placeholder="Your Name"
                         />
                     </div>
@@ -131,7 +138,7 @@ export default function Contact() {
                     <div>
                         <label
                             htmlFor="email"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
+                            className="block font-heading text-sm text-purple-400 mb-2"
                         >
                             Email
                         </label>
@@ -143,7 +150,7 @@ export default function Contact() {
                             onChange={(e) =>
                                 setFormState({ ...formState, email: e.target.value })
                             }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors"
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-purple-400 transition-colors"
                             placeholder="your@email.com"
                         />
                     </div>
@@ -151,7 +158,7 @@ export default function Contact() {
                     <div>
                         <label
                             htmlFor="message"
-                            className="block font-heading text-sm text-cyan-400 mb-2"
+                            className="block font-heading text-sm text-purple-400 mb-2"
                         >
                             Message
                         </label>
@@ -163,7 +170,7 @@ export default function Contact() {
                             onChange={(e) =>
                                 setFormState({ ...formState, message: e.target.value })
                             }
-                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-cyan-400 transition-colors resize-none"
+                            className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 font-body focus:border-purple-400 transition-colors resize-none"
                             placeholder="Your message..."
                         />
                     </div>
@@ -172,16 +179,16 @@ export default function Contact() {
                         type="submit"
                         disabled={status === "sending"}
                         className={`w-full py-4 rounded-lg font-heading text-sm transition-all btn-cyber ${status === "success"
-                                ? "bg-emerald-500 text-slate-900"
-                                : status === "error"
-                                    ? "bg-red-500/20 text-red-400 border border-red-500"
-                                    : "bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20"
+                            ? "bg-emerald-500 text-slate-900"
+                            : (status === "error" || status === "validation_error")
+                                ? "bg-red-500/20 text-red-400 border border-red-500"
+                                : "bg-purple-400/10 border border-purple-400 text-purple-400 hover:bg-purple-400/20"
                             }`}
                     >
                         {status === "idle" && "Send Message"}
                         {status === "sending" && "Sending..."}
                         {status === "success" && "Message Sent! ✓"}
-                        {status === "error" && "Invalid Email Format"}
+                        {(status === "error" || status === "validation_error") && errorMessage}
                     </button>
                 </form>
 
@@ -190,7 +197,7 @@ export default function Contact() {
                     <div className="space-y-3">
                         <p className="flex items-center justify-center gap-2">
                             <svg
-                                className="w-4 h-4 text-cyan-400"
+                                className="w-4 h-4 text-purple-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -206,7 +213,7 @@ export default function Contact() {
                         </p>
                         <p className="flex items-center justify-center gap-2">
                             <svg
-                                className="w-4 h-4 text-cyan-400"
+                                className="w-4 h-4 text-purple-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -235,7 +242,7 @@ export default function Contact() {
                             href="https://www.facebook.com/rohan.thapasth"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-slate-500 hover:text-cyan-400 transition-colors"
+                            className="text-slate-500 hover:text-purple-400 transition-colors"
                             aria-label="Facebook"
                         >
                             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -287,3 +294,4 @@ export default function Contact() {
         </section>
     );
 }
+

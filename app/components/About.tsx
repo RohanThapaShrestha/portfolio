@@ -49,7 +49,7 @@ export default function About() {
             <div className="max-w-6xl mx-auto">
                 {/* Section Title */}
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-12 flex items-center gap-4">
-                    <span className="text-cyan-400">01.</span>
+                    <span className="text-purple-400">01.</span>
                     About Me
                     <span className="flex-1 h-px bg-slate-800 max-w-xs" />
                 </h2>
@@ -59,7 +59,7 @@ export default function About() {
                     <div className="about-content md:col-span-3 space-y-6 text-slate-400 font-body text-lg leading-relaxed">
                         <p>
                             Hello! I&apos;m Rohan, a Security Analyst based in{" "}
-                            <span className="text-cyan-400">Kathmandu, Nepal</span>. My
+                            <span className="text-purple-400">Kathmandu, Nepal</span>. My
                             journey into cybersecurity began with a foundation in Computer
                             Science and front-end development, which gave me a unique
                             perspective on how applications are built—and how they can be
@@ -67,7 +67,7 @@ export default function About() {
                         </p>
                         <p>
                             Currently working at{" "}
-                            <span className="text-cyan-400 font-medium">Monal Tech</span>, I
+                            <span className="text-purple-400 font-medium">Monal Tech</span>, I
                             spend my days conducting VAPT on networks and applications,
                             investigating security incidents, and performing forensic analysis
                             on blockchain transactions.
@@ -82,8 +82,8 @@ export default function About() {
 
                     {/* Stats Cards */}
                     <div className="md:col-span-2 space-y-4">
-                        <div className="stat-card bg-slate-900 p-6 rounded-lg border-l-4 border-cyan-400">
-                            <h3 className="font-heading text-cyan-400 text-sm mb-2">
+                        <div className="stat-card bg-slate-900 p-6 rounded-lg border-l-4 border-purple-400">
+                            <h3 className="font-heading text-purple-400 text-sm mb-2">
                                 Education
                             </h3>
                             <p className="text-slate-100 font-medium">BCS (Hons)</p>
@@ -114,3 +114,4 @@ export default function About() {
         </section>
     );
 }
+

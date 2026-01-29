@@ -58,7 +58,7 @@ const skillsData = [
 ];
 
 const colorClasses: { [key: string]: { bg: string; text: string; border: string } } = {
-    cyan: { bg: "bg-cyan-400/10", text: "text-cyan-400", border: "border-cyan-400/30" },
+    cyan: { bg: "bg-purple-400/10", text: "text-purple-400", border: "border-purple-400/30" },
     emerald: { bg: "bg-emerald-400/10", text: "text-emerald-400", border: "border-emerald-400/30" },
     purple: { bg: "bg-purple-400/10", text: "text-purple-400", border: "border-purple-400/30" },
     orange: { bg: "bg-orange-400/10", text: "text-orange-400", border: "border-orange-400/30" },
@@ -103,7 +103,7 @@ export default function Skills() {
             <div className="max-w-6xl mx-auto">
                 {/* Section Title */}
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-12 flex items-center gap-4">
-                    <span className="text-cyan-400">02.</span>
+                    <span className="text-purple-400">02.</span>
                     Technical Arsenal
                     <span className="flex-1 h-px bg-slate-800 max-w-xs" />
                 </h2>
@@ -148,3 +148,4 @@ export default function Skills() {
         </section>
     );
 }
+

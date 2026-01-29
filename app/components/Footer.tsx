@@ -4,9 +4,10 @@ export default function Footer() {
             <div className="max-w-6xl mx-auto text-center">
                 <p className="font-heading text-sm text-slate-500">
                     Designed & Built by{" "}
-                    <span className="text-cyan-400">Rohan Thapa Shrestha</span> | © 2026
+                    <span className="text-purple-400">Rohan Thapa Shrestha</span> | © 2026
                 </p>
             </div>
         </footer>
     );
 }
+

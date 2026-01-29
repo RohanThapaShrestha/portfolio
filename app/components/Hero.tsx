@@ -109,7 +109,7 @@ export default function Hero() {
         >
             <div className="max-w-4xl">
                 {/* Terminal Text */}
-                <span className="hero-terminal font-heading text-cyan-400 text-sm md:text-base mb-4 block cursor-blink">
+                <span className="hero-terminal font-heading text-purple-400 text-sm md:text-base mb-4 block cursor-blink">
                     &gt; initializing_portfolio...
                 </span>
 
@@ -139,7 +139,7 @@ export default function Hero() {
                 <div className="flex flex-wrap gap-4">
                     <Link
                         href="#projects"
-                        className="hero-btn btn-cyber px-6 py-3 bg-cyan-400/10 border border-cyan-400 text-cyan-400 rounded font-heading text-sm hover:bg-cyan-400/20 transition-all"
+                        className="hero-btn btn-cyber px-6 py-3 bg-purple-400/10 border border-purple-400 text-purple-400 rounded font-heading text-sm hover:bg-purple-400/20 transition-all"
                     >
                         View Case Studies
                     </Link>
@@ -152,7 +152,7 @@ export default function Hero() {
                     <a
                         href="/resume.pdf"
                         download
-                        className="hero-btn px-6 py-3 text-slate-400 hover:text-cyan-400 transition-colors font-heading text-sm flex items-center gap-2"
+                        className="hero-btn px-6 py-3 text-slate-400 hover:text-purple-400 transition-colors font-heading text-sm flex items-center gap-2"
                     >
                         <svg
                             className="w-4 h-4"
@@ -174,3 +174,4 @@ export default function Hero() {
         </section>
     );
 }
+

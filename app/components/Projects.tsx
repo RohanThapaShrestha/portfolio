@@ -77,7 +77,7 @@ export default function Projects() {
             <div className="max-w-6xl mx-auto">
                 {/* Section Title */}
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-12 flex items-center gap-4">
-                    <span className="text-cyan-400">04.</span>
+                    <span className="text-purple-400">04.</span>
                     Case Studies & Labs
                     <span className="flex-1 h-px bg-slate-800 max-w-xs" />
                 </h2>
@@ -93,7 +93,7 @@ export default function Projects() {
                             <div className="flex justify-between items-start mb-6">
                                 {project.icon === "folder" ? (
                                     <svg
-                                        className="w-10 h-10 text-cyan-400"
+                                        className="w-10 h-10 text-purple-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -127,7 +127,7 @@ export default function Projects() {
                             </div>
 
                             {/* Title */}
-                            <h3 className="font-heading text-xl font-bold text-slate-100 mb-4 group-hover:text-cyan-400 transition-colors">
+                            <h3 className="font-heading text-xl font-bold text-slate-100 mb-4 group-hover:text-purple-400 transition-colors">
                                 {project.title}
                             </h3>
 
@@ -149,3 +149,4 @@ export default function Projects() {
         </section>
     );
 }
+
