@@ -65,6 +65,9 @@ export default function Contact() {
         try {
             const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
+            console.log("Starting form submission...");
+            console.log("Access key present:", !!ACCESS_KEY);
+
             if (!ACCESS_KEY) {
                 throw new Error("Web3Forms access key not configured");
             }
@@ -77,23 +80,39 @@ export default function Contact() {
             formData.append("message", formState.message);
             formData.append("subject", `Portfolio Contact: Message from ${formState.name}`);
 
+            console.log("Form data prepared:", {
+                name: formState.name,
+                email: formState.email,
+                message: formState.message.substring(0, 50) + "..."
+            });
+
             // Send using Web3Forms API
             const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
                 body: formData
             });
 
+            console.log("Response status:", response.status);
+            console.log("Response ok:", response.ok);
+
             const result = await response.json();
+            console.log("API Response:", result);
 
             if (result.success) {
+                console.log("✅ Message sent successfully!");
                 setStatus("success");
                 setFormState({ name: "", email: "", message: "" });
                 timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
             } else {
+                console.error("❌ API returned success: false", result);
                 throw new Error(result.message || "Failed to send message");
             }
         } catch (error) {
-            console.error("Email sending failed:", error);
+            console.error("❌ Email sending failed:", error);
+            if (error instanceof Error) {
+                console.error("Error message:", error.message);
+                console.error("Error stack:", error.stack);
+            }
             setStatus("error");
             setErrorMessage(error instanceof Error ? error.message : "Failed to send message. Please try again.");
             timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
