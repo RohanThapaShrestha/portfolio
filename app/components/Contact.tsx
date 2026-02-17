@@ -63,40 +63,33 @@ export default function Contact() {
         setStatus("sending");
 
         try {
-            const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+            const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
             console.log("Starting form submission...");
-            console.log("Access key present:", !!ACCESS_KEY);
+            console.log("Worker URL present:", !!WORKER_URL);
 
-            if (!ACCESS_KEY) {
-                throw new Error("Web3Forms access key not configured");
+            if (!WORKER_URL) {
+                throw new Error("Cloudflare Worker URL not configured");
             }
 
-            // Create FormData and populate it
-            const formData = new FormData();
-            formData.append("access_key", ACCESS_KEY);
-            formData.append("name", formState.name);
-            formData.append("email", formState.email);
-            formData.append("message", formState.message);
-            formData.append("subject", `Portfolio Contact: Message from ${formState.name}`);
-
-            console.log("Form data prepared:", {
-                name: formState.name,
-                email: formState.email,
-                message: formState.message.substring(0, 50) + "..."
-            });
-
-            // Send using Web3Forms API
-            const response = await fetch("https://api.web3forms.com/submit", {
+            // Send data to Cloudflare Worker
+            const response = await fetch(WORKER_URL, {
                 method: "POST",
-                body: formData
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: formState.name,
+                    email: formState.email,
+                    message: formState.message,
+                }),
             });
 
             console.log("Response status:", response.status);
             console.log("Response ok:", response.ok);
 
             const result = await response.json();
-            console.log("API Response:", result);
+            console.log("Worker Response:", result);
 
             if (result.success) {
                 console.log("✅ Message sent successfully!");
@@ -104,7 +97,7 @@ export default function Contact() {
                 setFormState({ name: "", email: "", message: "" });
                 timeoutRef.current = setTimeout(() => setStatus("idle"), 3000);
             } else {
-                console.error("❌ API returned success: false", result);
+                console.error("❌ Worker returned success: false", result);
                 throw new Error(result.message || "Failed to send message");
             }
         } catch (error) {
