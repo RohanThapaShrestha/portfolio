@@ -1,107 +1,105 @@
 /**
  * Cloudflare Worker for Contact Form Email Sending
- * Uses MailChannels API to send emails
+ * Uses Resend API to send emails
  */
 
-addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request, event))
-})
+export default {
+    async fetch(request, env, ctx) {
+        // Handle CORS preflight requests
+        if (request.method === 'OPTIONS') {
+            return handleCORS();
+        }
 
-async function handleRequest(request, event) {
-    // Handle CORS preflight requests
-    if (request.method === 'OPTIONS') {
-        return handleCORS()
-    }
+        // Only allow POST requests
+        if (request.method !== 'POST') {
+            return new Response(JSON.stringify({
+                success: false,
+                message: 'Method not allowed'
+            }), {
+                status: 405,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getCORSHeaders()
+                }
+            });
+        }
 
-    // Only allow POST requests
-    if (request.method !== 'POST') {
-        return new Response(JSON.stringify({
-            success: false,
-            message: 'Method not allowed'
-        }), {
-            status: 405,
-            headers: {
-                'Content-Type': 'application/json',
-                ...getCORSHeaders()
+        try {
+            // Parse the request body
+            const data = await request.json();
+            const { name, email, message } = data;
+
+            // Validate required fields
+            if (!name || !email || !message) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    message: 'Missing required fields'
+                }), {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getCORSHeaders()
+                    }
+                });
             }
-        })
-    }
 
-    try {
-        // Parse the request body
-        const data = await request.json()
-        const { name, email, message } = data
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    message: 'Invalid email format'
+                }), {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getCORSHeaders()
+                    }
+                });
+            }
 
-        // Validate required fields
-        if (!name || !email || !message) {
+            // Send email via Resend
+            const emailResult = await sendEmail(name, email, message, env);
+
+            if (emailResult.success) {
+                return new Response(JSON.stringify({
+                    success: true,
+                    message: 'Email sent successfully'
+                }), {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getCORSHeaders()
+                    }
+                });
+            } else {
+                return new Response(JSON.stringify({
+                    success: false,
+                    message: 'Failed to send email'
+                }), {
+                    status: 500,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getCORSHeaders()
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error('Error processing request:', error);
             return new Response(JSON.stringify({
                 success: false,
-                message: 'Missing required fields'
-            }), {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getCORSHeaders()
-                }
-            })
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(email)) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: 'Invalid email format'
-            }), {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getCORSHeaders()
-                }
-            })
-        }
-
-        // Send email via Resend
-        const emailResult = await sendEmail(name, email, message, event.env)
-
-        if (emailResult.success) {
-            return new Response(JSON.stringify({
-                success: true,
-                message: 'Email sent successfully'
-            }), {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getCORSHeaders()
-                }
-            })
-        } else {
-            return new Response(JSON.stringify({
-                success: false,
-                message: 'Failed to send email'
+                message: 'Internal server error'
             }), {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
                     ...getCORSHeaders()
                 }
-            })
+            });
         }
-
-    } catch (error) {
-        console.error('Error processing request:', error)
-        return new Response(JSON.stringify({
-            success: false,
-            message: 'Internal server error'
-        }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                ...getCORSHeaders()
-            }
-        })
     }
-}
+};
 
 async function sendEmail(name, email, message, env) {
     // Get Resend API key from environment variable
@@ -120,7 +118,7 @@ async function sendEmail(name, email, message, env) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from: 'Portfolio Contact <onboarding@resend.dev>', // Resend verified sender
+                from: 'Portfolio Contact <onboarding@resend.dev>',
                 to: ['info@rohanthapashrestha.com.np'],
                 reply_to: email,
                 subject: `Portfolio Contact: Message from ${name}`,
@@ -190,15 +188,15 @@ async function sendEmail(name, email, message, env) {
 
 function getCORSHeaders() {
     return {
-        'Access-Control-Allow-Origin': '*', // Change to your domain in production: 'https://yourdomain.com'
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
-    }
+    };
 }
 
 function handleCORS() {
     return new Response(null, {
         status: 204,
         headers: getCORSHeaders()
-    })
+    });
 }
