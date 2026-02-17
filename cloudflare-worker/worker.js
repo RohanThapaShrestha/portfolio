@@ -119,7 +119,7 @@ async function sendEmail(name, email, message, env) {
             },
             body: JSON.stringify({
                 from: 'Portfolio Contact <onboarding@resend.dev>',
-                to: ['info@rohanthapashrestha.com.np'],
+                to: ['rohanthapa763@gmail.com'], // Your verified Resend email
                 reply_to: email,
                 subject: `Portfolio Contact: Message from ${name}`,
                 html: `
